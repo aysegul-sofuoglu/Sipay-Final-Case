@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Base;
+using Business;
 using DataAccess.Domain;
 using DataAccess.Repository;
+using DataAccess.Uow;
 using Microsoft.AspNetCore.Mvc;
 using Schema;
 
@@ -11,39 +13,37 @@ namespace WebApi.Controllers
     [Route("[controller]s")]
     public class InvoiceController : ControllerBase
     {
-        private readonly IInvoiceRepository repository;
+        private readonly IInvoiceService service;
+        private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
 
-        public InvoiceController(IInvoiceRepository repository, IMapper mapper)
+        public InvoiceController(IUnitOfWork unitOfWork, IMapper mapper, IInvoiceService service)
         {
-            this.repository = repository;
+            this.unitOfWork = unitOfWork;
             this.mapper = mapper;
+            this.service = service;
         }
 
 
         [HttpGet]
         public ApiResponse<List<InvoiceResponse>> GetAll()
         {
-            var entityList = repository.GetAll();
-            var mapped = mapper.Map<List<Invoice>, List<InvoiceResponse>>(entityList);
-            return new ApiResponse<List<InvoiceResponse>>(mapped);
+            var response = service.GetAll();
+            return response;
         }
 
         [HttpGet("{id}")]
         public ApiResponse<InvoiceResponse> Get(int id)
         {
-            var entity = repository.GetById(id);
-            var mapped = mapper.Map<Invoice, InvoiceResponse>(entity);
-            return new ApiResponse<InvoiceResponse>(mapped);
+            var response = service.GetById(id);
+            return response;
         }
 
         [HttpPost]
         public ApiResponse Post([FromBody] InvoiceRequest request)
         {
-            var entity = mapper.Map<InvoiceRequest, Invoice>(request);
-            repository.Insert(entity);
-            repository.Save();
-            return new ApiResponse();
+            var response = service.Insert(request);
+            return response;
         }
 
         [HttpPut("{id}")]
@@ -52,8 +52,8 @@ namespace WebApi.Controllers
             var entity = mapper.Map<InvoiceRequest, Invoice>(request);
             entity.InvoiceId = id;
 
-            repository.Update(entity);
-            repository.Save();
+            unitOfWork.InvoiceRepository.Update(entity);
+            unitOfWork.Complete();
             return new ApiResponse();
         }
 
@@ -61,9 +61,8 @@ namespace WebApi.Controllers
         public ApiResponse Delete(int id)
         {
 
-            repository.DeleteById(id);
-            repository.Save();
-            return new ApiResponse();
+            var response = service.Delete(id);
+            return response;
         }
     }
 }

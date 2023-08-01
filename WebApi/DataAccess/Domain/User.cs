@@ -21,7 +21,7 @@ namespace DataAccess.Domain
         public virtual List<BankCardInfo> BankCards { get; set; }
         public virtual List<Apartment> Apartments { get; set; }
         public virtual List<Message> Messages { get; set; }
-        public virtual List<Payment> Payments { get; set; }
+        //public virtual List<Payment> Payments { get; set; }
 
     }
 }

@@ -15,8 +15,8 @@ namespace DataAccess.Domain
         public virtual Apartment Apartment { get; set; }
         public int Mounth { get; set; }
         public int Year { get; set; }
-        public decimal Amounth { get; set; }
+        public decimal Amount { get; set; }
 
-        public virtual List<Payment> Payments { get; set; } 
+        //public virtual List<Payment> Payments { get; set; } 
     }
 }

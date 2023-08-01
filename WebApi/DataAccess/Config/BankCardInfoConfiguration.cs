@@ -21,8 +21,8 @@ namespace DataAccess.Config
             builder.HasKey(x => x.CardId);
             builder.HasIndex(x => x.UserId);
 
+            builder.HasMany(x => x.Payments).WithOne(x => x.BankCardInfo).HasForeignKey(x => x.CardId).IsRequired(true);
 
-            
         }
     }
 }

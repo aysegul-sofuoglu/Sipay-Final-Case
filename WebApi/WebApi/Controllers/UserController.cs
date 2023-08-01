@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Base;
+using Business;
 using DataAccess.Domain;
 using DataAccess.Repository;
+using DataAccess.Uow;
 using Microsoft.AspNetCore.Mvc;
 using Schema;
 
@@ -11,12 +13,14 @@ namespace WebApi.Controllers
     [Route("[controller]s")]
     public class UserController : ControllerBase
     {
-        private readonly IUserRepository repository;
+        private readonly IUserService service;
+        private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
 
-        public UserController(IUserRepository repository, IMapper mapper)
+        public UserController(IUserService service, IUnitOfWork unitOfWork, IMapper mapper)
         {
-            this.repository = repository;
+            this.service = service;
+            this.unitOfWork = unitOfWork;
             this.mapper = mapper;
         }
 
@@ -24,46 +28,43 @@ namespace WebApi.Controllers
         [HttpGet]
         public ApiResponse<List<UserResponse>> GetAll()
         {
-            var entityList = repository.GetAll();
-            var mapped = mapper.Map<List<User>, List<UserResponse>>(entityList);
-            return new ApiResponse<List<UserResponse>>(mapped);
+            var response = service.GetAll("Apartments.Dueses", "Apartments.Invoices", "Messages" , "BankCards");
+            return response;
         }
 
         [HttpGet("{id}")]
         public ApiResponse<UserResponse> Get(int id)
         {
-            var entity = repository.GetById(id);
-            var mapped = mapper.Map<User, UserResponse>(entity);
-            return new ApiResponse<UserResponse>(mapped);
+            var response = service.GetById(id,"Apartments.Dueses", "Apartments.Invoices", "Messages", "BankCards");
+            return response;
         }
 
         [HttpPost]
         public ApiResponse Post([FromBody] UserRequest request)
         {
-            var entity = mapper.Map<UserRequest, User>(request);
-            repository.Insert(entity);
-            repository.Save();
-            return new ApiResponse();
+            var response = service.Insert(request);
+            return response;
         }
 
         [HttpPut("{id}")]
         public ApiResponse Update(int id, [FromBody] UserRequest request)
         {
+
             var entity = mapper.Map<UserRequest, User>(request);
             entity.UserId = id;
 
-            repository.Update(entity);
-            repository.Save();
+            unitOfWork.UserRepository.Update(entity);
+            unitOfWork.Complete();
             return new ApiResponse();
         }
 
         [HttpDelete("{id}")]
         public ApiResponse Delete(int id)
         {
-           
-            repository.DeleteById(id);
-            repository.Save();
-            return new ApiResponse();
+
+            var response = service.Delete(id);
+
+            return response;
         }
     }
 }

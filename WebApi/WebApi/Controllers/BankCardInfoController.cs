@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Base;
+using Business;
 using DataAccess.Domain;
 using DataAccess.Repository;
+using DataAccess.Uow;
 using Microsoft.AspNetCore.Mvc;
 using Schema;
 
@@ -11,39 +13,37 @@ namespace WebApi.Controllers
     [Route("[controller]s")]
     public class BankCardInfoController : ControllerBase
     {
-        private readonly IBankCardInfoRepository repository;
+        private readonly IBankCardInfoService service;
+        private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
 
-        public BankCardInfoController(IBankCardInfoRepository repository, IMapper mapper)
+        public BankCardInfoController(IUnitOfWork unitOfWork, IMapper mapper, IBankCardInfoService service)
         {
-            this.repository = repository;
+            this.unitOfWork = unitOfWork;
             this.mapper = mapper;
+            this.service = service;
         }
 
 
         [HttpGet]
         public ApiResponse<List<BankCardInfoResponse>> GetAll()
         {
-            var entityList = repository.GetAll();
-            var mapped = mapper.Map<List<BankCardInfo>, List<BankCardInfoResponse>>(entityList);
-            return new ApiResponse<List<BankCardInfoResponse>>(mapped);
+            var response = service.GetAll("Payments");
+            return response;
         }
 
         [HttpGet("{id}")]
         public ApiResponse<BankCardInfoResponse> Get(int id)
         {
-            var entity = repository.GetById(id);
-            var mapped = mapper.Map<BankCardInfo, BankCardInfoResponse>(entity);
-            return new ApiResponse<BankCardInfoResponse>(mapped);
+            var response = service.GetById(id, "Payments");
+            return response;
         }
 
         [HttpPost]
         public ApiResponse Post([FromBody] BankCardInfoRequest request)
         {
-            var entity = mapper.Map<BankCardInfoRequest, BankCardInfo>(request);
-            repository.Insert(entity);
-            repository.Save();
-            return new ApiResponse();
+            var response = service.Insert(request);
+            return response;
         }
 
         [HttpPut("{id}")]
@@ -52,8 +52,8 @@ namespace WebApi.Controllers
             var entity = mapper.Map<BankCardInfoRequest, BankCardInfo>(request);
             entity.CardId = id;
 
-            repository.Update(entity);
-            repository.Save();
+            unitOfWork.BankCardInfoRepository.Update(entity);
+            unitOfWork.Complete();
             return new ApiResponse();
         }
 
@@ -61,9 +61,10 @@ namespace WebApi.Controllers
         public ApiResponse Delete(int id)
         {
 
-            repository.DeleteById(id);
-            repository.Save();
-            return new ApiResponse();
+
+            var response = service.Delete(id);
+
+            return response;
         }
     }
 }

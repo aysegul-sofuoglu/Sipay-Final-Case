@@ -95,7 +95,7 @@ namespace DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DuesId"), 1L, 1);
 
-                    b.Property<decimal>("Amounth")
+                    b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("ApartmentId")
@@ -139,7 +139,7 @@ namespace DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InvoiceId"), 1L, 1);
 
-                    b.Property<decimal>("Amounth")
+                    b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("ApartmentId")
@@ -200,28 +200,18 @@ namespace DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PaymentId"), 1L, 1);
 
-                    b.Property<decimal>("Amounth")
+                    b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("CardId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("DuesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("InvoiceId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("PaymentId");
 
-                    b.HasIndex("DuesId");
-
-                    b.HasIndex("InvoiceId");
-
-                    b.HasIndex("UserId");
+                    b.HasIndex("CardId");
 
                     b.ToTable("Payment", "dbo");
                 });
@@ -333,29 +323,13 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.Domain.Payment", b =>
                 {
-                    b.HasOne("DataAccess.Domain.Dues", "Dues")
+                    b.HasOne("DataAccess.Domain.BankCardInfo", "BankCardInfo")
                         .WithMany("Payments")
-                        .HasForeignKey("DuesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DataAccess.Domain.Invoice", "Invoice")
-                        .WithMany("Payments")
-                        .HasForeignKey("InvoiceId")
+                        .HasForeignKey("CardId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("DataAccess.Domain.User", "User")
-                        .WithMany("Payments")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Dues");
-
-                    b.Navigation("Invoice");
-
-                    b.Navigation("User");
+                    b.Navigation("BankCardInfo");
                 });
 
             modelBuilder.Entity("DataAccess.Domain.Apartment", b =>
@@ -365,7 +339,7 @@ namespace DataAccess.Migrations
                     b.Navigation("Invoices");
                 });
 
-            modelBuilder.Entity("DataAccess.Domain.Dues", b =>
+            modelBuilder.Entity("DataAccess.Domain.BankCardInfo", b =>
                 {
                     b.Navigation("Payments");
                 });
@@ -375,11 +349,6 @@ namespace DataAccess.Migrations
                     b.Navigation("Invoices");
                 });
 
-            modelBuilder.Entity("DataAccess.Domain.Invoice", b =>
-                {
-                    b.Navigation("Payments");
-                });
-
             modelBuilder.Entity("DataAccess.Domain.User", b =>
                 {
                     b.Navigation("Apartments");
@@ -387,8 +356,6 @@ namespace DataAccess.Migrations
                     b.Navigation("BankCards");
 
                     b.Navigation("Messages");
-
-                    b.Navigation("Payments");
                 });
 #pragma warning restore 612, 618
         }

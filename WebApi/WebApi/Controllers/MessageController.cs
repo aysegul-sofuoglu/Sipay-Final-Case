@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Base;
+using Business;
 using DataAccess.Domain;
 using DataAccess.Repository;
+using DataAccess.Uow;
 using Microsoft.AspNetCore.Mvc;
 using Schema;
 
@@ -12,39 +14,37 @@ namespace WebApi.Controllers
     [Route("[controller]s")]
     public class MessageController : ControllerBase
     {
-        private readonly IMessageRepository repository;
+        private readonly IMessageService service;
+        private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
 
-        public MessageController(IMessageRepository repository, IMapper mapper)
+        public MessageController(IUnitOfWork unitOfWork, IMapper mapper, IMessageService service)
         {
-            this.repository = repository;
+            this.unitOfWork = unitOfWork;
             this.mapper = mapper;
+            this.service = service;
         }
 
 
         [HttpGet]
         public ApiResponse<List<MessageResponse>> GetAll()
         {
-            var entityList = repository.GetAll();
-            var mapped = mapper.Map<List<Message>, List<MessageResponse>>(entityList);
-            return new ApiResponse<List<MessageResponse>>(mapped);
+            var response = service.GetAll();
+            return response;
         }
 
         [HttpGet("{id}")]
         public ApiResponse<MessageResponse> Get(int id)
         {
-            var entity = repository.GetById(id);
-            var mapped = mapper.Map<Message, MessageResponse>(entity);
-            return new ApiResponse<MessageResponse>(mapped);
+            var response = service.GetById(id);
+            return response;
         }
 
         [HttpPost]
         public ApiResponse Post([FromBody] MessageRequest request)
         {
-            var entity = mapper.Map<MessageRequest, Message>(request);
-            repository.Insert(entity);
-            repository.Save();
-            return new ApiResponse();
+            var response = service.Insert(request);
+            return response;
         }
 
         [HttpPut("{id}")]
@@ -53,8 +53,8 @@ namespace WebApi.Controllers
             var entity = mapper.Map<MessageRequest, Message>(request);
             entity.MessageId = id;
 
-            repository.Update(entity);
-            repository.Save();
+            unitOfWork.MessageRepository.Update(entity);
+            unitOfWork.Complete();
             return new ApiResponse();
         }
 
@@ -62,9 +62,8 @@ namespace WebApi.Controllers
         public ApiResponse Delete(int id)
         {
 
-            repository.DeleteById(id);
-            repository.Save();
-            return new ApiResponse();
+            var response = service.Delete(id);
+            return response;
         }
     }
 }

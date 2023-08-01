@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
+using Business;
+using Business.Generic;
 using DataAccess;
 using DataAccess.Repository;
+using DataAccess.Uow;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Schema;
@@ -35,15 +38,7 @@ namespace WebApi
                 opts.UseSqlServer(dbConfig));
             }
 
-
-            services.AddScoped<IApartmentRepository, ApartmentRepository>();
-            services.AddScoped<IBankCardInfoRepository, BankCardInfoRepository>();
-            services.AddScoped<IDuesRepository, DuesRepository>();
-            services.AddScoped<IGenreRepository, GenreRepository>();
-            services.AddScoped<IInvoiceRepository, InvoiceRepository>();
-            services.AddScoped<IMessageRepository, MessageRepository>();
-            services.AddScoped<IPaymentRepository, PaymentRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
             var config = new MapperConfiguration(cfg =>
@@ -51,6 +46,14 @@ namespace WebApi
                 cfg.AddProfile(new MapperConfig());
             });
             services.AddSingleton(config.CreateMapper());
+
+            services.AddScoped<IApartmentService, ApartmentService>();
+            services.AddScoped<IBankCardInfoService, BankCardInfoService>();
+            services.AddScoped<IDuesService, DuesService>();
+            services.AddScoped<IInvoiceService, InvoiceService>();
+            services.AddScoped<IMessageService, MessageService>();
+            services.AddScoped<IPaymentService, PaymentService>();
+            services.AddScoped<IUserService, UserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

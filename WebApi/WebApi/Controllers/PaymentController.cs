@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
 using Base;
+using Business;
+using DataAccess;
 using DataAccess.Domain;
 using DataAccess.Repository;
+using DataAccess.Uow;
 using Microsoft.AspNetCore.Mvc;
 using Schema;
 
@@ -12,59 +15,36 @@ namespace WebApi.Controllers
     [Route("[controller]s")]
     public class PaymentController : ControllerBase
     {
-        private readonly IPaymentRepository repository;
-        private readonly IMapper mapper;
 
-        public PaymentController(IPaymentRepository repository, IMapper mapper)
+        private readonly IPaymentService service;
+
+        public PaymentController(IPaymentService service)
         {
-            this.repository = repository;
-            this.mapper = mapper;
+            this.service = service;
+          
         }
-
 
         [HttpGet]
         public ApiResponse<List<PaymentResponse>> GetAll()
         {
-            var entityList = repository.GetAll();
-            var mapped = mapper.Map<List<Payment>, List<PaymentResponse>>(entityList);
-            return new ApiResponse<List<PaymentResponse>>(mapped);
+            var response = service.GetAll();
+            return response;
         }
 
         [HttpGet("{id}")]
         public ApiResponse<PaymentResponse> Get(int id)
         {
-            var entity = repository.GetById(id);
-            var mapped = mapper.Map<Payment, PaymentResponse>(entity);
-            return new ApiResponse<PaymentResponse>(mapped);
+            var response = service.GetById(id);
+            return response;
         }
 
-        [HttpPost]
-        public ApiResponse Post([FromBody] PaymentRequest request)
+        [HttpPost("Transfer")]
+        public ApiResponse<PayResponse> Transfer([FromBody] PayRequest request)
         {
-            var entity = mapper.Map<PaymentRequest, Payment>(request);
-            repository.Insert(entity);
-            repository.Save();
-            return new ApiResponse();
+            var response = service.Pay(request);
+            return response;
         }
+    
 
-        [HttpPut("{id}")]
-        public ApiResponse Update(int id, [FromBody] PaymentRequest request)
-        {
-            var entity = mapper.Map<PaymentRequest, Payment>(request);
-            entity.PaymentId = id;
-
-            repository.Update(entity);
-            repository.Save();
-            return new ApiResponse();
-        }
-
-        [HttpDelete("{id}")]
-        public ApiResponse Delete(int id)
-        {
-
-            repository.DeleteById(id);
-            repository.Save();
-            return new ApiResponse();
-        }
     }
 }

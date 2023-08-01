@@ -16,6 +16,8 @@ namespace DataAccess.Domain
         public decimal Balance { get; set; }
         public string CardNo { get; set; }
 
-        
+        public virtual List<Payment> Payments { get; set; }
+
+
     }
 }
