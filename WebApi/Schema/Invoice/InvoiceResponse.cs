@@ -9,7 +9,8 @@ namespace Schema
     public class InvoiceResponse
     {
         public int InvoiceId { get; set; }
-        public int GenreId { get; set; }
+        //public int GenreId { get; set; }
+        public string Genre { get; set; }
         public int ApartmentId { get; set; }
         public int Mounth { get; set; }
         public int Year { get; set; }

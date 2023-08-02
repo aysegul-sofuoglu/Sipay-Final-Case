@@ -28,14 +28,14 @@ namespace WebApi.Controllers
         [HttpGet]
         public ApiResponse<List<InvoiceResponse>> GetAll()
         {
-            var response = service.GetAll();
+            var response = service.GetAll("Genre", "Payments");
             return response;
         }
 
         [HttpGet("{id}")]
         public ApiResponse<InvoiceResponse> Get(int id)
         {
-            var response = service.GetById(id);
+            var response = service.GetById(id, "Genre", "Payments");
             return response;
         }
 

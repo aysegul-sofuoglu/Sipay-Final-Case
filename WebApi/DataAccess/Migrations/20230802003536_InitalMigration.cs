@@ -182,6 +182,8 @@ namespace DataAccess.Migrations
                     PaymentId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CardId = table.Column<int>(type: "int", nullable: false),
+                    DuesId = table.Column<int>(type: "int", nullable: false),
+                    InvoiceId = table.Column<int>(type: "int", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
@@ -194,6 +196,18 @@ namespace DataAccess.Migrations
                         principalSchema: "dbo",
                         principalTable: "BankCardInfo",
                         principalColumn: "CardId");
+                    table.ForeignKey(
+                        name: "FK_Payment_Dues_DuesId",
+                        column: x => x.DuesId,
+                        principalSchema: "dbo",
+                        principalTable: "Dues",
+                        principalColumn: "DuesId");
+                    table.ForeignKey(
+                        name: "FK_Payment_Invoice_InvoiceId",
+                        column: x => x.InvoiceId,
+                        principalSchema: "dbo",
+                        principalTable: "Invoice",
+                        principalColumn: "InvoiceId");
                 });
 
             migrationBuilder.CreateIndex(
@@ -237,18 +251,22 @@ namespace DataAccess.Migrations
                 schema: "dbo",
                 table: "Payment",
                 column: "CardId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Payment_DuesId",
+                schema: "dbo",
+                table: "Payment",
+                column: "DuesId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Payment_InvoiceId",
+                schema: "dbo",
+                table: "Payment",
+                column: "InvoiceId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Dues",
-                schema: "dbo");
-
-            migrationBuilder.DropTable(
-                name: "Invoice",
-                schema: "dbo");
-
             migrationBuilder.DropTable(
                 name: "Message",
                 schema: "dbo");
@@ -258,15 +276,23 @@ namespace DataAccess.Migrations
                 schema: "dbo");
 
             migrationBuilder.DropTable(
+                name: "BankCardInfo",
+                schema: "dbo");
+
+            migrationBuilder.DropTable(
+                name: "Dues",
+                schema: "dbo");
+
+            migrationBuilder.DropTable(
+                name: "Invoice",
+                schema: "dbo");
+
+            migrationBuilder.DropTable(
                 name: "Apartment",
                 schema: "dbo");
 
             migrationBuilder.DropTable(
                 name: "Genre",
-                schema: "dbo");
-
-            migrationBuilder.DropTable(
-                name: "BankCardInfo",
                 schema: "dbo");
 
             migrationBuilder.DropTable(

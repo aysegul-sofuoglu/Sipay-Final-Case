@@ -209,9 +209,19 @@ namespace DataAccess.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("DuesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("InvoiceId")
+                        .HasColumnType("int");
+
                     b.HasKey("PaymentId");
 
                     b.HasIndex("CardId");
+
+                    b.HasIndex("DuesId");
+
+                    b.HasIndex("InvoiceId");
 
                     b.ToTable("Payment", "dbo");
                 });
@@ -329,7 +339,23 @@ namespace DataAccess.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("DataAccess.Domain.Dues", "Dues")
+                        .WithMany("Payments")
+                        .HasForeignKey("DuesId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("DataAccess.Domain.Invoice", "Invoice")
+                        .WithMany("Payments")
+                        .HasForeignKey("InvoiceId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.Navigation("BankCardInfo");
+
+                    b.Navigation("Dues");
+
+                    b.Navigation("Invoice");
                 });
 
             modelBuilder.Entity("DataAccess.Domain.Apartment", b =>
@@ -344,9 +370,19 @@ namespace DataAccess.Migrations
                     b.Navigation("Payments");
                 });
 
+            modelBuilder.Entity("DataAccess.Domain.Dues", b =>
+                {
+                    b.Navigation("Payments");
+                });
+
             modelBuilder.Entity("DataAccess.Domain.Genre", b =>
                 {
                     b.Navigation("Invoices");
+                });
+
+            modelBuilder.Entity("DataAccess.Domain.Invoice", b =>
+                {
+                    b.Navigation("Payments");
                 });
 
             modelBuilder.Entity("DataAccess.Domain.User", b =>

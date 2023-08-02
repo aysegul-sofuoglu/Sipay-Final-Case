@@ -22,7 +22,7 @@ namespace DataAccess.Config
             builder.HasIndex(x => x.ApartmentId);
 
 
-            //builder.HasMany(x => x.Payments).WithOne(x => x.Dues).HasForeignKey(x => x.DuesId).IsRequired(true); 
+            builder.HasMany(x => x.Payments).WithOne(x => x.Dues).HasForeignKey(x => x.DuesId).IsRequired(true); 
             //builder.HasMany(x => x.Invoices).WithOne(x => x.Dues).HasForeignKey(x => x.DuesId).IsRequired(true);
 
            

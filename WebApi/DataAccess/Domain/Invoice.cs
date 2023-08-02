@@ -19,7 +19,7 @@ namespace DataAccess.Domain
         public int Year { get; set; }
         public decimal Amount { get; set; }
 
-       // public virtual List<Payment> Payments { get; set; }
+        public virtual List<Payment> Payments { get; set; }
 
 
     }

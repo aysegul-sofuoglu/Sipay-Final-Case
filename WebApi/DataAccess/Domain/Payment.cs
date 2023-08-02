@@ -15,10 +15,10 @@ namespace DataAccess.Domain
         public virtual BankCardInfo BankCardInfo { get; set; }
         //public int UserId { get; set; }
         //public virtual User User { get; set; }
-       // public int DuesId { get; set; }
-       // public virtual Dues Dues { get; set; }
-        //public int InvoiceId { get; set; }
-        //public virtual Invoice Invoice { get; set; }
+        public int DuesId { get; set; }
+        public virtual Dues Dues { get; set; }
+        public int InvoiceId { get; set; }
+        public virtual Invoice Invoice { get; set; }
         public virtual DateTime Date { get; set; }
         public decimal Amount { get; set; }
 

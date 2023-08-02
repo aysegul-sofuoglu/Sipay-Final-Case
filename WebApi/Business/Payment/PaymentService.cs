@@ -30,7 +30,7 @@ namespace Business
         {
             try
             {
-                var entityList = unitOfWork.PaymentRepository.GetAll();
+                var entityList = unitOfWork.PaymentRepository.GetAllWithInclude("BankCardInfo.User");
                 var mapped = mapper.Map<List<Payment>, List<PaymentResponse>>(entityList);
                 return new ApiResponse<List<PaymentResponse>>(mapped);
             }
@@ -45,7 +45,7 @@ namespace Business
         {
             try
             {
-                var entity = unitOfWork.PaymentRepository.GetById(id);
+                var entity = unitOfWork.PaymentRepository.GetByIdWithInclude(id, "BankCardInfo.User");
                 var mapped = mapper.Map<Payment, PaymentResponse>(entity);
                 return new ApiResponse<PaymentResponse>(mapped);
             }
@@ -111,14 +111,18 @@ namespace Business
 
             Payment paymentTo = new Payment();
             paymentTo.CardId = bankCardTo.CardId;
-            
-            //paymentTo.Description = request.Description;
+            paymentTo.DuesId = request.DuesId;
+            paymentTo.InvoiceId = request.InvoiceId;
             paymentTo.Amount = request.Amount;
+            paymentTo.Date = request.Date;
             unitOfWork.PaymentRepository.Insert(paymentTo);
 
             Payment paymentFrom = new Payment();
             paymentFrom.CardId = bankCardFrom.CardId;
+            paymentFrom.DuesId = request.DuesId;
+            paymentFrom.InvoiceId = request.InvoiceId;
             paymentFrom.Amount = request.Amount;
+            paymentFrom.Date = request.Date;
             unitOfWork.PaymentRepository.Insert(paymentFrom);
             unitOfWork.Complete();
 
