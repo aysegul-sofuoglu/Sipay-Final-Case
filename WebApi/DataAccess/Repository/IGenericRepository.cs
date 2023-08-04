@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 
 namespace DataAccess.Repository
 {
@@ -17,6 +13,7 @@ namespace DataAccess.Repository
         void DeleteById(int id);
         List<Entity> GetAll();
         List<Entity> GetAllWithInclude(params string[] includes);
+        IEnumerable<Entity> Where(Expression<Func<Entity, bool>> expression);
         IQueryable<Entity> GetAllAsQueryable();
     }
 }

@@ -4,11 +4,6 @@ using Business.Generic;
 using DataAccess.Domain;
 using DataAccess.Uow;
 using Schema;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Business
 {
@@ -32,6 +27,7 @@ namespace Business
         {
             return base.GetById(id, includes);
         }
+
 
         ApiResponse IBankCardInfoService.Balance(int cardId, decimal amount, PaymentDirection direction)
         {
@@ -66,5 +62,7 @@ namespace Business
 
             return new ApiResponse();
         }
+
+
     }
 }

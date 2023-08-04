@@ -3,11 +3,6 @@ using Base;
 using DataAccess.Domain;
 using DataAccess.Uow;
 using Schema;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Business.Generic
 {

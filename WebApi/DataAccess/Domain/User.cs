@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataAccess.Domain
 {
@@ -15,13 +10,14 @@ namespace DataAccess.Domain
         public string Surname { get; set; }
         public string TCNo { get; set; }
         public string Email { get; set; }
+        public string Password { get; set; }
         public string Telephone { get; set; }
-        public string PlateNo { get; set; }
+        public string? PlateNo { get; set; }
+        public string Role { get; set; }
 
         public virtual List<BankCardInfo> BankCards { get; set; }
         public virtual List<Apartment> Apartments { get; set; }
         public virtual List<Message> Messages { get; set; }
-        //public virtual List<Payment> Payments { get; set; }
 
     }
 }

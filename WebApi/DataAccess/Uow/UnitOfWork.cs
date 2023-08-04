@@ -1,11 +1,6 @@
 ﻿using DataAccess.Domain;
 using DataAccess.Repository;
 using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataAccess.Uow
 {
@@ -26,6 +21,7 @@ namespace DataAccess.Uow
             MessageRepository = new GenericRepository<Message>(dbContext);
             PaymentRepository = new GenericRepository<Payment>(dbContext);
             UserRepository = new GenericRepository<User>(dbContext);
+            UserLogRepository = new GenericRepository<UserLog>(dbContext);
         }
 
         public void Complete()
@@ -72,6 +68,7 @@ namespace DataAccess.Uow
         public IGenericRepository<Payment> PaymentRepository { get; private set; }
 
         public IGenericRepository<User> UserRepository { get; private set; }
+        public IGenericRepository<UserLog> UserLogRepository { get; private set; }
 
        
     }

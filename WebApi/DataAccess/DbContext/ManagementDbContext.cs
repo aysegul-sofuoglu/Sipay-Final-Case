@@ -18,6 +18,7 @@ namespace DataAccess
         public DbSet<Message> Messages { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<UserLog> UserLogs { get; set; }
         public DbSet<Genre> Genres { get; set; }
 
 
@@ -31,6 +32,7 @@ namespace DataAccess
             modelBuilder.ApplyConfiguration(new MesageConfiguration());
             modelBuilder.ApplyConfiguration(new PaymentConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
+            modelBuilder.ApplyConfiguration(new UserLogConfiguration());
             modelBuilder.ApplyConfiguration(new GenreConfiguration());
 
             base.OnModelCreating(modelBuilder);

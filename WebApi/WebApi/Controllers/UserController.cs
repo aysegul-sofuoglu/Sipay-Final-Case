@@ -2,13 +2,14 @@
 using Base;
 using Business;
 using DataAccess.Domain;
-using DataAccess.Repository;
 using DataAccess.Uow;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Schema;
 
 namespace WebApi.Controllers
 {
+    
     [ApiController]
     [Route("[controller]s")]
     public class UserController : ControllerBase
@@ -25,6 +26,7 @@ namespace WebApi.Controllers
         }
 
 
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public ApiResponse<List<UserResponse>> GetAll()
         {
@@ -32,6 +34,8 @@ namespace WebApi.Controllers
             return response;
         }
 
+
+        [Authorize(Roles = "admin")]
         [HttpGet("{id}")]
         public ApiResponse<UserResponse> Get(int id)
         {
@@ -39,6 +43,8 @@ namespace WebApi.Controllers
             return response;
         }
 
+
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public ApiResponse Post([FromBody] UserRequest request)
         {
@@ -46,6 +52,8 @@ namespace WebApi.Controllers
             return response;
         }
 
+
+        [Authorize(Roles = "admin")]
         [HttpPut("{id}")]
         public ApiResponse Update(int id, [FromBody] UserRequest request)
         {
@@ -58,6 +66,7 @@ namespace WebApi.Controllers
             return new ApiResponse();
         }
 
+        [Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
         public ApiResponse Delete(int id)
         {

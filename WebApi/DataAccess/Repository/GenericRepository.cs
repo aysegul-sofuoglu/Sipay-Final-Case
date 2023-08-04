@@ -1,10 +1,6 @@
 ﻿using DataAccess.Domain;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace DataAccess.Repository
 {
@@ -61,11 +57,17 @@ namespace DataAccess.Repository
             dbContext.Set<Entity>().Update(entity);
         }
 
+        public IEnumerable<Entity> Where(Expression<Func<Entity, bool>> expression)
+        {
+            return dbContext.Set<Entity>().Where(expression).AsQueryable();
+        }
+
+
         public Entity GetByIdWithInclude(int id, params string[] includes)
         {
             var query = dbContext.Set<Entity>().AsQueryable();
             query = includes.Aggregate(query, (current, inc) => current.Include(inc));
-            //return query.FirstOrDefault();
+         
 
             if(typeof(Entity) == typeof(User))
             {
