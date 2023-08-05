@@ -101,6 +101,14 @@ namespace DataAccess.Repository
             {
                 query = query.Where(x => (x as Genre).GenreId == id);
             }
+            else if (typeof(Entity) == typeof(Block))
+            {
+                query = query.Where(x => (x as Block).BlockId == id);
+            }
+            else if (typeof(Entity) == typeof(ApartmentType))
+            {
+                query = query.Where(x => (x as ApartmentType).TypeId == id);
+            }
 
             return query.FirstOrDefault();
         }

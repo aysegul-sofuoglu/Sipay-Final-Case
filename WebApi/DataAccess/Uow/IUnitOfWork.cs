@@ -18,6 +18,8 @@ namespace DataAccess.Uow
         IGenericRepository<Payment> PaymentRepository { get; }
         IGenericRepository<User> UserRepository { get; }
         IGenericRepository<UserLog> UserLogRepository { get; }
+        IGenericRepository<Block> BlockRepository { get; }
+        IGenericRepository<ApartmentType> ApartmentTypeRepository { get; }
 
 
 

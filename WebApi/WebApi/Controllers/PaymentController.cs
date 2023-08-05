@@ -43,6 +43,14 @@ namespace WebApi.Controllers
             return response;
         }
 
+        [Authorize(Roles = "admin")]
+        [HttpDelete("{id}")]
+        public ApiResponse Delete(int id)
+        {
+            var response = service.Delete(id);
+            return response;
+        }
+
 
         [Authorize(Roles = "user")]
         [HttpPost("Transfer")]

@@ -37,12 +37,35 @@ namespace WebApi.Controllers
         }
 
 
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "user")]
         [HttpGet("{id}")]
         public ApiResponse<BankCardInfoResponse> Get(int id)
         {
+            string jwtToken = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            string userIdString = GetUserIdFromJwt(jwtToken);
+            int userId = Convert.ToInt32(userIdString);
             var response = service.GetById(id, "Payments", "User");
-            return response;
+
+            if (response.Response == null)
+            {
+                return new ApiResponse<BankCardInfoResponse>("Card data not found.");
+            }
+
+            if (response.Response.UserId == null)
+            {
+                return new ApiResponse<BankCardInfoResponse>("Card data not found for the user.");
+            }
+
+
+            if (response.Response.UserId == userId)
+            {
+                return response;
+            }
+            else
+            {
+                return new ApiResponse<BankCardInfoResponse>("This card does not have to you.");
+            }
+
         }
 
 
@@ -101,6 +124,8 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public ApiResponse Delete(int id)
         {
+
+
             var response = service.Delete(id);
 
             return response;

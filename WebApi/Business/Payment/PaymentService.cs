@@ -50,6 +50,29 @@ namespace Business
             }
         }
 
+
+        public ApiResponse Delete(int Id)
+        {
+            try
+            {
+                var entity = unitOfWork.PaymentRepository.GetById(Id);
+                if (entity == null)
+                {
+                    return new ApiResponse("Record not found!");
+                }
+
+                unitOfWork.PaymentRepository.DeleteById(Id);
+                unitOfWork.Complete();
+                return new ApiResponse();
+            }
+
+            catch (Exception ex)
+            {
+                Log.Error(ex, "PaymentService.Delete");
+                return new ApiResponse(ex.Message);
+            }
+        }
+
         public ApiResponse<PayResponse> Pay(PayRequest request)
         {
             if (request == null)
@@ -103,14 +126,6 @@ namespace Business
 
 
 
-            Payment paymentTo = new Payment();
-            paymentTo.CardId = bankCardTo.CardId;
-            paymentTo.DuesId = request.DuesId;
-            paymentTo.InvoiceId = request.InvoiceId;
-            paymentTo.Amount = request.Amount;
-            paymentTo.Date = request.Date;
-            unitOfWork.PaymentRepository.Insert(paymentTo);
-
             Payment paymentFrom = new Payment();
             paymentFrom.CardId = bankCardFrom.CardId;
             paymentFrom.DuesId = request.DuesId;
@@ -130,5 +145,7 @@ namespace Business
             return new ApiResponse<PayResponse>(response);
 
         }
+
+
     }
 }

@@ -9,5 +9,6 @@ namespace Business
         ApiResponse<PaymentResponse> GetById(int id);
 
         ApiResponse<PayResponse> Pay(PayRequest request);
+        ApiResponse Delete(int Id);
     }
 }

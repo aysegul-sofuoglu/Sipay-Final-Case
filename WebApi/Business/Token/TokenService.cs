@@ -3,6 +3,7 @@ using Base.Jwt;
 using Base.LogType;
 using DataAccess.Domain;
 using DataAccess.Uow;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Schema;
@@ -94,6 +95,7 @@ namespace Business.Token
                 );
 
             var accessToken = new JwtSecurityTokenHandler().WriteToken(jwtToken);
+            
             return accessToken;
         }
 

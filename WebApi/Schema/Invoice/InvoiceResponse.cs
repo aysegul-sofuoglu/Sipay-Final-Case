@@ -8,6 +8,7 @@
         public int Mounth { get; set; }
         public int Year { get; set; }
         public decimal Amount { get; set; }
+        
 
         public virtual List<PaymentResponse> Payments { get; set; }
     }

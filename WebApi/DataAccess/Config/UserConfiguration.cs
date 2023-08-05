@@ -21,7 +21,7 @@ namespace DataAccess.Config
 
             builder.HasMany(x=>x.BankCards).WithOne(x=>x.User).HasForeignKey(x=>x.UserId).IsRequired(true); ;
             builder.HasMany(x => x.Messages).WithOne(x => x.User).HasForeignKey(x => x.SenderId).IsRequired(true);
-            builder.HasMany(x => x.Apartments).WithOne(x => x.User).HasForeignKey(x => x.UserId).IsRequired(true); ;
+            builder.HasMany(x => x.Apartments).WithOne(x => x.User).HasForeignKey(x => x.UserId).IsRequired(true); 
 
         }
     }

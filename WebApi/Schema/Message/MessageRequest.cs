@@ -6,6 +6,5 @@
         
         public string Mesage { get; set; }
         public virtual DateTime Date { get; set; }
-        //public bool Seen { get; set; }
     }
 }

@@ -20,6 +20,8 @@ namespace DataAccess
         public DbSet<User> Users { get; set; }
         public DbSet<UserLog> UserLogs { get; set; }
         public DbSet<Genre> Genres { get; set; }
+        public  DbSet<Block> Blocks { get; set; }
+        public DbSet<ApartmentType> ApartmentTypes { get; set; }
 
 
 
@@ -34,6 +36,8 @@ namespace DataAccess
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new UserLogConfiguration());
             modelBuilder.ApplyConfiguration(new GenreConfiguration());
+            modelBuilder.ApplyConfiguration(new BlockConfiguration());
+            modelBuilder.ApplyConfiguration(new ApartmentTypeConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

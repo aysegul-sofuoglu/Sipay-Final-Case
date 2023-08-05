@@ -9,7 +9,9 @@ namespace Schema
         public MapperConfig()
         {
             CreateMap<ApartmentRequest, Apartment>();
-            CreateMap<Apartment, ApartmentResponse>().ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.Name + " " + src.User.Surname));
+            CreateMap<Apartment, ApartmentResponse>().ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.Name + " " + src.User.Surname))
+                .ForMember(dest => dest.Block, opt => opt.MapFrom(src => src.Block.Name))
+                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.ApartmentType.Type));
 
             CreateMap<BankCardInfoRequest, BankCardInfo>();
             CreateMap<BankCardInfo, BankCardInfoResponse>().ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.Name + " " + src.User.Surname));

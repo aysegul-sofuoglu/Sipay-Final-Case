@@ -3,6 +3,7 @@
     public class ApartmentResponse
     {
         public int ApartmentId { get; set; }
+        public int UserId { get; set; }
         public string UserName { get; set; }
         public string Block { get; set; }
         public bool Situation { get; set; }

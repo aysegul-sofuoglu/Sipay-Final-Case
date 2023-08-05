@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Base;
 using Business.Generic;
 using DataAccess.Domain;
 using DataAccess.Uow;
@@ -16,5 +17,19 @@ namespace Business
             this.mapper = mapper;
             this.unitOfWork = unitOfWork;
         }
+
+
+        public ApiResponse UpdateMessage(int messageId, MessageRequest request)
+        {
+      
+            var message = unitOfWork.MessageRepository.GetById(messageId);
+
+            message.Seen = true;
+            unitOfWork.MessageRepository.Update(message);
+            unitOfWork.Complete();
+
+            return new ApiResponse();
+        }
     }
 }
+

@@ -9,7 +9,7 @@ using Schema;
 
 namespace WebApi.Controllers
 {
-    
+
     [ApiController]
     [Route("[controller]s")]
     public class DuesController : ControllerBase
@@ -29,7 +29,9 @@ namespace WebApi.Controllers
         [HttpGet]
         public ApiResponse<List<DuesResponse>> GetAll()
         {
-            var response = service.GetAll();
+            var response = service.GetAll("Payments");
+
+
             return response;
         }
 
@@ -38,6 +40,7 @@ namespace WebApi.Controllers
         public ApiResponse<DuesResponse> Get(int id)
         {
             var response = service.GetById(id);
+
             return response;
         }
 
@@ -72,5 +75,44 @@ namespace WebApi.Controllers
             var response = service.Delete(id);
             return response;
         }
+
+        [Authorize(Roles = "admin")]
+        [HttpGet("unpaid")]
+        public ApiResponse<List<DuesResponse>> GetUnpaidDues()
+        {
+            var response = service.GetAll("Payments");
+
+            var unpaidDuesList = new List<DuesResponse>();
+
+            foreach (var duesResponse in response.Response)
+            {
+                var payments = duesResponse.Payments;
+
+                if (payments == null || !payments.Any() && payments.Sum(p => p.Amount) != duesResponse.Amount)
+                {
+                    
+
+                    duesResponse.Payments = payments?.Select(payment => new PaymentResponse
+                    {
+                        PaymentId = payment.PaymentId,
+                        CardId = payment.CardId,
+                        UserName = payment.UserName,
+                        DuesId = payment.DuesId,
+                        InvoiceId = payment.InvoiceId,
+                        Date = payment.Date,
+                        Amount = payment.Amount,
+                    }).ToList();
+
+                    unpaidDuesList.Add(duesResponse);
+                }
+                
+            }
+
+            return new ApiResponse<List<DuesResponse>>(unpaidDuesList);
+        }
+
+
+
+        
     }
 }

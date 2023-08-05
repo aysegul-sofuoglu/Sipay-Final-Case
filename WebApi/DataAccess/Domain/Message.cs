@@ -7,11 +7,13 @@ namespace DataAccess.Domain
     {
         public int MessageId { get; set; }
         public int SenderId { get; set; }
-        public virtual User User { get; set; }
         public string Mesage { get; set; }
         public virtual DateTime Date { get; set; }
         public bool Seen { get; set; }
 
-      
+
+        public virtual User User { get; set; }
+
+
     }
 }

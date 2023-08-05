@@ -13,6 +13,34 @@ namespace DataAccess.Migrations
                 name: "dbo");
 
             migrationBuilder.CreateTable(
+                name: "ApartmentType",
+                schema: "dbo",
+                columns: table => new
+                {
+                    TypeId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Type = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApartmentType", x => x.TypeId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Block",
+                schema: "dbo",
+                columns: table => new
+                {
+                    BlockId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Block", x => x.BlockId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Genre",
                 schema: "dbo",
                 columns: table => new
@@ -73,15 +101,29 @@ namespace DataAccess.Migrations
                     ApartmentId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    Block = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    BlockId = table.Column<int>(type: "int", maxLength: 50, nullable: false),
                     Situation = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    Type = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    TypeId = table.Column<int>(type: "int", maxLength: 50, nullable: false),
                     Floor = table.Column<int>(type: "int", nullable: false),
                     ApartmentNo = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Apartment", x => x.ApartmentId);
+                    table.ForeignKey(
+                        name: "FK_Apartment_ApartmentType_TypeId",
+                        column: x => x.TypeId,
+                        principalSchema: "dbo",
+                        principalTable: "ApartmentType",
+                        principalColumn: "TypeId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Apartment_Block_BlockId",
+                        column: x => x.BlockId,
+                        principalSchema: "dbo",
+                        principalTable: "Block",
+                        principalColumn: "BlockId",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Apartment_User_UserId",
                         column: x => x.UserId,
@@ -231,6 +273,18 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Apartment_BlockId",
+                schema: "dbo",
+                table: "Apartment",
+                column: "BlockId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Apartment_TypeId",
+                schema: "dbo",
+                table: "Apartment",
+                column: "TypeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Apartment_UserId",
                 schema: "dbo",
                 table: "Apartment",
@@ -317,6 +371,14 @@ namespace DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "Genre",
+                schema: "dbo");
+
+            migrationBuilder.DropTable(
+                name: "ApartmentType",
+                schema: "dbo");
+
+            migrationBuilder.DropTable(
+                name: "Block",
                 schema: "dbo");
 
             migrationBuilder.DropTable(

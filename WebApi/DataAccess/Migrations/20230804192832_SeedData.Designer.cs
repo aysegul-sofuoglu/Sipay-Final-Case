@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ManagementDbContext))]
-    [Migration("20230803145756_InitalMigration")]
-    partial class InitalMigration
+    [Migration("20230804192832_SeedData")]
+    partial class SeedData
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -35,10 +35,9 @@ namespace DataAccess.Migrations
                     b.Property<int>("ApartmentNo")
                         .HasColumnType("int");
 
-                    b.Property<string>("Block")
-                        .IsRequired()
+                    b.Property<int>("BlockId")
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("int");
 
                     b.Property<int>("Floor")
                         .HasColumnType("int");
@@ -48,19 +47,41 @@ namespace DataAccess.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
-                    b.Property<string>("Type")
-                        .IsRequired()
+                    b.Property<int>("TypeId")
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("int");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.HasKey("ApartmentId");
 
+                    b.HasIndex("BlockId");
+
+                    b.HasIndex("TypeId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("Apartment", "dbo");
+                });
+
+            modelBuilder.Entity("DataAccess.Domain.ApartmentType", b =>
+                {
+                    b.Property<int>("TypeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TypeId"), 1L, 1);
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.HasKey("TypeId");
+
+                    b.ToTable("ApartmentType", "dbo");
                 });
 
             modelBuilder.Entity("DataAccess.Domain.BankCardInfo", b =>
@@ -87,6 +108,24 @@ namespace DataAccess.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("BankCardInfo", "dbo");
+                });
+
+            modelBuilder.Entity("DataAccess.Domain.Block", b =>
+                {
+                    b.Property<int>("BlockId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BlockId"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.HasKey("BlockId");
+
+                    b.ToTable("Block", "dbo");
                 });
 
             modelBuilder.Entity("DataAccess.Domain.Dues", b =>
@@ -318,11 +357,27 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.Domain.Apartment", b =>
                 {
+                    b.HasOne("DataAccess.Domain.Block", "Block")
+                        .WithMany("Apartments")
+                        .HasForeignKey("BlockId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DataAccess.Domain.ApartmentType", "ApartmentType")
+                        .WithMany("Apartments")
+                        .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("DataAccess.Domain.User", "User")
                         .WithMany("Apartments")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("ApartmentType");
+
+                    b.Navigation("Block");
 
                     b.Navigation("User");
                 });
@@ -413,9 +468,19 @@ namespace DataAccess.Migrations
                     b.Navigation("Invoices");
                 });
 
+            modelBuilder.Entity("DataAccess.Domain.ApartmentType", b =>
+                {
+                    b.Navigation("Apartments");
+                });
+
             modelBuilder.Entity("DataAccess.Domain.BankCardInfo", b =>
                 {
                     b.Navigation("Payments");
+                });
+
+            modelBuilder.Entity("DataAccess.Domain.Block", b =>
+                {
+                    b.Navigation("Apartments");
                 });
 
             modelBuilder.Entity("DataAccess.Domain.Dues", b =>

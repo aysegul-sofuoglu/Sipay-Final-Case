@@ -33,6 +33,19 @@ namespace WebApi.Controllers
         public ApiResponse<List<MessageResponse>> GetAll()
         {
             var response = service.GetAll("User");
+            if(response.Success)
+            {
+                foreach (var message in response.Response)
+                {
+                    if(message.Seen == false)
+                    {
+                        message.Seen = true;
+                        service.UpdateMessage(message.MessageId, new MessageRequest());
+                    }
+                    
+                }
+            }
+
             return response;
         }
 

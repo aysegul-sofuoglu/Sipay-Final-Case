@@ -30,6 +30,7 @@ namespace Business.Generic
                 unitOfWork.Complete();
                 return new ApiResponse();
             }
+
             catch(Exception ex)
             {
                 Log.Error(ex,"GenericService.Delete");

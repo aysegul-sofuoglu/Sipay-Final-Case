@@ -6,6 +6,8 @@ using DataAccess.Uow;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Schema;
+using Serilog;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace WebApi.Controllers
 {
@@ -29,18 +31,44 @@ namespace WebApi.Controllers
         [HttpGet]
         public ApiResponse<List<ApartmentResponse>> GetAll()
         {
-            var response = service.GetAll("Dueses.Payments", "Invoices.Payments", "User");
+            var response = service.GetAll("Dueses.Payments", "Invoices.Payments", "User", "ApartmentType", "Block");
             return response;
         }
 
 
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "user")]
         [HttpGet("{id}")]
         public ApiResponse<ApartmentResponse> Get(int id)
         {
-            var response = service.GetById(id, "Dueses.Payments", "Invoices.Payments", "User");
-            return response;
+            string jwtToken = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            string userIdString = GetUserIdFromJwt(jwtToken);
+            int userId = Convert.ToInt32(userIdString);
+            var response = service.GetById(id, "Dueses.Payments", "Invoices.Payments", "User", "ApartmentType", "Block");
+
+            if (response.Response == null)
+            {
+                return new ApiResponse<ApartmentResponse>("Apartment data not found.");
+            }
+
+            if (response.Response.UserId == null)
+            {
+                return new ApiResponse<ApartmentResponse>("User data not found for the apartment.");
+            }
+
+  
+            if (response.Response.UserId == userId)
+            {
+           
+                return response;
+            }
+            else
+            {
+     
+                return new ApiResponse<ApartmentResponse>("This apartment does not have to you.");
+            }
         }
+
+       
 
 
         [Authorize(Roles = "admin")]
@@ -74,6 +102,25 @@ namespace WebApi.Controllers
             var response = service.Delete(id);
 
             return response;
+        }
+
+
+
+        private string GetUserIdFromJwt(string jwtToken)
+        {
+            try
+            {
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var decodedToken = tokenHandler.ReadJwtToken(jwtToken);
+
+                var userIdClaim = decodedToken.Claims.FirstOrDefault(claim => claim.Type == "UserId")?.Value;
+                return userIdClaim;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Error while decoding JWT");
+                throw;
+            }
         }
     }
 }

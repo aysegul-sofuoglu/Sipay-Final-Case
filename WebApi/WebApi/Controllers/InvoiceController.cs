@@ -74,5 +74,41 @@ namespace WebApi.Controllers
             var response = service.Delete(id);
             return response;
         }
+
+        [Authorize(Roles = "admin")]
+        [HttpGet("unpaid")]
+        public ApiResponse<List<InvoiceResponse>> GetUnpaidInvoice()
+        {
+            var response = service.GetAll("Payments", "Genre");
+
+            var unpaidInvoiceList = new List<InvoiceResponse>();
+
+            foreach (var invoiceResponse in response.Response)
+            {
+                var payments = invoiceResponse.Payments;
+
+                if (payments == null || !payments.Any() && payments.Sum(p => p.Amount) != invoiceResponse.Amount)
+                {
+
+
+                    invoiceResponse.Payments = payments?.Select(payment => new PaymentResponse
+                    {
+                        PaymentId = payment.PaymentId,
+                        CardId = payment.CardId,
+                        UserName = payment.UserName,
+                        DuesId = payment.DuesId,
+                        InvoiceId = payment.InvoiceId,
+                        Date = payment.Date,
+                        Amount = payment.Amount,
+                    }).ToList();
+
+                    unpaidInvoiceList.Add(invoiceResponse);
+                }
+
+            }
+
+           
+            return new ApiResponse<List<InvoiceResponse>>(unpaidInvoiceList);
+        }
     }
 }

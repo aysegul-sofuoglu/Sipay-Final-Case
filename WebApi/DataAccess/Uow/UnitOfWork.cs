@@ -22,6 +22,8 @@ namespace DataAccess.Uow
             PaymentRepository = new GenericRepository<Payment>(dbContext);
             UserRepository = new GenericRepository<User>(dbContext);
             UserLogRepository = new GenericRepository<UserLog>(dbContext);
+            BlockRepository = new GenericRepository<Block>(dbContext);
+            ApartmentTypeRepository = new GenericRepository<ApartmentType>(dbContext);
         }
 
         public void Complete()
@@ -68,8 +70,13 @@ namespace DataAccess.Uow
         public IGenericRepository<Payment> PaymentRepository { get; private set; }
 
         public IGenericRepository<User> UserRepository { get; private set; }
+
         public IGenericRepository<UserLog> UserLogRepository { get; private set; }
 
-       
+        public IGenericRepository<Block> BlockRepository { get; private set; }
+
+        public IGenericRepository<ApartmentType> ApartmentTypeRepository { get; private set; }
+
+
     }
 }

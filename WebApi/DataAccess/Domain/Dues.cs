@@ -7,10 +7,12 @@ namespace DataAccess.Domain
     {
         public int DuesId { get; set; }
         public int ApartmentId { get; set; }
-        public virtual Apartment Apartment { get; set; }
         public int Mounth { get; set; }
         public int Year { get; set; }
         public decimal Amount { get; set; }
+
+
+        public virtual Apartment Apartment { get; set; }
 
         public virtual List<Payment> Payments { get; set; } 
     }
