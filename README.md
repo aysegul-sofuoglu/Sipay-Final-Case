@@ -62,7 +62,7 @@
 
 ## Role Descriptions and Authorizations
 Roles : admin , user
-- Admin =>
+- **Admin** 
   - When the application starts, it gets a token with the existing mail and password information and logs in.
   - Adds new users, updates, deletes, can see users.
   - Assigns users to apartments. Can see apartments. View invoices and dues for apartment buildings. See payment information if paid.
@@ -70,7 +70,7 @@ Roles : admin , user
   - See incoming payment information.
   - See incoming messages. If it displays messages, the seen information is updated.
   - View unpaid invoices and dues as a list.
-- User =>
+- **User** 
   - It sees the invoice and dues information assigned to itself.
   - Can pay by credit card.
   - Can send a message to the administrator.
