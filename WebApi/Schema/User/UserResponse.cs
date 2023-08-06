@@ -11,7 +11,5 @@
 
         public virtual List<BankCardInfoResponse> BankCards { get; set; }
         public virtual List<ApartmentResponse> Apartments { get; set; }
-        public virtual List<MessageResponse> Messages { get; set; }
-        public virtual List<PaymentResponse> Payments { get; set; }
     }
 }

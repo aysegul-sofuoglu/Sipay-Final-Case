@@ -30,7 +30,7 @@ namespace WebApi.Controllers
         [HttpGet]
         public ApiResponse<List<UserResponse>> GetAll()
         {
-            var response = service.GetAll("Apartments.Dueses", "Apartments.Invoices", "Messages" , "BankCards");
+            var response = service.GetAll("Apartments.Dueses.Payments", "Apartments.Invoices.Payments", "Messages" , "BankCards");
             return response;
         }
 
