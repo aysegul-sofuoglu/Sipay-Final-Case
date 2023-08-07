@@ -16,7 +16,7 @@
 ## Installation and Usage
 - You must make your database connections before starting the project. Enter your MSSQL information in the appsettings.json file in the WebApi layer.
 
-![Ekran görüntüsü 2023-08-06 003042](https://github.com/aysegul-sofuoglu/Sipay-Final-Case/assets/73445450/fb994e32-1230-4ab6-b54b-e07cc2938f7c)
+![db connect](https://github.com/aysegul-sofuoglu/Sipay-Final-Case/blob/main/img/258609598-fb994e32-1230-4ab6-b54b-e07cc2938f7c.png)
 
 - Migrations should be added to the DataAccess layer of the project.
    - `cd.DataAccess`
@@ -51,7 +51,7 @@
    -  `dotnet ef database update --project "./DataAccess" --startup-project "./WebApi"`
 
 ## Database Design
-![Ekran görüntüsü 2023-08-06 011142](https://github.com/aysegul-sofuoglu/Sipay-Final-Case/assets/73445450/0fa5ef3a-3b34-4db5-a89a-dc9330c49332)
+![db schema](https://github.com/aysegul-sofuoglu/Sipay-Final-Case/blob/main/img/258610588-0fa5ef3a-3b34-4db5-a89a-dc9330c49332.png)
  
  ## Folder Structure
 - **WebApi :** This layer contains the APIs used in Controllers.
@@ -79,5 +79,5 @@ Roles : admin , user
 
  ## Project Overview
  
-  ![sipay](https://github.com/aysegul-sofuoglu/Sipay-Final-Case/assets/73445450/ce0ec22e-8ce5-400d-8350-c296db84973d)
+  ![project](https://github.com/aysegul-sofuoglu/Sipay-Final-Case/blob/main/img/sipay.gif)
 
