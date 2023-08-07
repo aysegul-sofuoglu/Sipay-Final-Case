@@ -77,3 +77,7 @@ Roles : admin , user
   - It displays its own apartment and bank card by searching with id.
   - It can add and update a new bank card for itself.
 
+ ## Project Overview
+ 
+  ![sipay](https://github.com/aysegul-sofuoglu/Sipay-Final-Case/assets/73445450/ce0ec22e-8ce5-400d-8350-c296db84973d)
+
