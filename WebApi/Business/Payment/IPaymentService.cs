@@ -5,7 +5,7 @@ namespace Business
 {
     public interface IPaymentService 
     {
-        ApiResponse<List<PaymentResponse>> GetAll();
+        ApiResponse<List<PaymentResponse>> GetAll(params string[] includes);
         ApiResponse<PaymentResponse> GetById(int id);
 
         ApiResponse<PayResponse> Pay(PayRequest request);

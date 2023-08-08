@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Schema;
 using Serilog;
 using System.IdentityModel.Tokens.Jwt;
+using WebApi.Helpers;
 
 namespace WebApi.Controllers
 {
@@ -30,7 +31,7 @@ namespace WebApi.Controllers
         [HttpGet]
         public ApiResponse<List<PaymentResponse>> GetAll()
         {
-            var response = service.GetAll();
+            var response = service.GetAll("User");
             return response;
         }
 
@@ -58,13 +59,11 @@ namespace WebApi.Controllers
         {
             var usercard = unitOfWork.BankCardInfoRepository.Where(card => card.CardId == request.FromCardId).FirstOrDefault();
 
-            string jwtToken = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            string userIdString = GetUserIdFromJwt(jwtToken);
-            int userId = Convert.ToInt32(userIdString);
+            int userId = JwtHelper.GetUserIdFromJwt(HttpContext);
 
             if (usercard.CardId != request.FromCardId || userId != usercard.UserId)
             {
-                return new ApiResponse<PayResponse>("Card not found or it does not belong to the user." + usercard.CardId + " " + request.FromCardId + " " + userId + " " + usercard.UserId);
+                return new ApiResponse<PayResponse>("Card not found or it does not belong to the user.");
             }
 
             if(request.FromCardId == request.ToCardId)
@@ -78,27 +77,6 @@ namespace WebApi.Controllers
 
 
 
-        }
-
-
-
-
-
-        private string GetUserIdFromJwt(string jwtToken)
-        {
-            try
-            {
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var decodedToken = tokenHandler.ReadJwtToken(jwtToken);
-
-                var userIdClaim = decodedToken.Claims.FirstOrDefault(claim => claim.Type == "UserId")?.Value;
-                return userIdClaim;
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "Error while decoding JWT");
-                throw;
-            }
         }
 
 

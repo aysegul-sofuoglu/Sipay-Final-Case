@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Schema;
 using Serilog;
 using System.IdentityModel.Tokens.Jwt;
+using WebApi.Helpers;
 
 namespace WebApi.Controllers
 {
@@ -41,9 +42,9 @@ namespace WebApi.Controllers
         [HttpGet("{id}")]
         public ApiResponse<BankCardInfoResponse> Get(int id)
         {
-            string jwtToken = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            string userIdString = GetUserIdFromJwt(jwtToken);
-            int userId = Convert.ToInt32(userIdString);
+            int userId = JwtHelper.GetUserIdFromJwt(HttpContext);
+
+
             var response = service.GetById(id, "Payments", "User");
 
             if (response.Response == null)
@@ -75,11 +76,9 @@ namespace WebApi.Controllers
         {
             var entity = mapper.Map<BankCardInfoRequest, BankCardInfo>(request);
 
-            string jwtToken = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            string userIdString = GetUserIdFromJwt(jwtToken);
-            int userId = Convert.ToInt32(userIdString);
+            int userId = JwtHelper.GetUserIdFromJwt(HttpContext);
 
-            
+
 
             if (userId != request.UserId)
             {
@@ -99,11 +98,9 @@ namespace WebApi.Controllers
             var entity = mapper.Map<BankCardInfoRequest, BankCardInfo>(request);
             entity.CardId = id;
 
-            string jwtToken = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            string userIdString = GetUserIdFromJwt(jwtToken);
-            int userId = Convert.ToInt32(userIdString);
+            int userId = JwtHelper.GetUserIdFromJwt(HttpContext);
 
-            if(userId != request.UserId)
+            if (userId != request.UserId)
             {
                 return new ApiResponse("This card does not have to you!" );
             }
@@ -131,23 +128,5 @@ namespace WebApi.Controllers
             return response;
         }
 
-
-
-        private string GetUserIdFromJwt(string jwtToken)
-        {
-            try
-            {
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var decodedToken = tokenHandler.ReadJwtToken(jwtToken);
-
-                var userIdClaim = decodedToken.Claims.FirstOrDefault(claim => claim.Type == "UserId")?.Value;
-                return userIdClaim;
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "Error while decoding JWT");
-                throw;
-            }
-        }
     }
 }

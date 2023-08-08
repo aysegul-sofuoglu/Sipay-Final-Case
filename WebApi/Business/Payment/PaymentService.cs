@@ -20,7 +20,7 @@ namespace Business
             this.bankCardInfoService = bankCardInfoService;
         }
 
-        public ApiResponse<List<PaymentResponse>> GetAll()
+        public ApiResponse<List<PaymentResponse>> GetAll(params string[] includes)
         {
             try
             {

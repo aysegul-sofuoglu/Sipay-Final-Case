@@ -39,7 +39,7 @@ namespace WebApi.Controllers
         [HttpGet("{id}")]
         public ApiResponse<UserResponse> Get(int id)
         {
-            var response = service.GetById(id,"Apartments.Dueses", "Apartments.Invoices", "Messages", "BankCards");
+            var response = service.GetById(id,"Apartments.Dueses.Payments", "Apartments.Invoices.Payments", "Messages", "BankCards");
             return response;
         }
 

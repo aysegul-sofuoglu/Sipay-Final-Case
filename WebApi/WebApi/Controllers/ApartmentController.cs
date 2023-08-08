@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Schema;
 using Serilog;
 using System.IdentityModel.Tokens.Jwt;
+using WebApi.Helpers;
 
 namespace WebApi.Controllers
 {
@@ -40,9 +41,11 @@ namespace WebApi.Controllers
         [HttpGet("{id}")]
         public ApiResponse<ApartmentResponse> Get(int id)
         {
-            string jwtToken = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            string userIdString = GetUserIdFromJwt(jwtToken);
-            int userId = Convert.ToInt32(userIdString);
+
+            int userId = JwtHelper.GetUserIdFromJwt(HttpContext);
+
+
+
             var response = service.GetById(id, "Dueses.Payments", "Invoices.Payments", "User", "ApartmentType", "Block");
 
             if (response.Response == null)
@@ -105,22 +108,5 @@ namespace WebApi.Controllers
         }
 
 
-
-        private string GetUserIdFromJwt(string jwtToken)
-        {
-            try
-            {
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var decodedToken = tokenHandler.ReadJwtToken(jwtToken);
-
-                var userIdClaim = decodedToken.Claims.FirstOrDefault(claim => claim.Type == "UserId")?.Value;
-                return userIdClaim;
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "Error while decoding JWT");
-                throw;
-            }
-        }
     }
 }

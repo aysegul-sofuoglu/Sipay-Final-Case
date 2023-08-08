@@ -26,7 +26,25 @@ namespace Schema
             CreateMap<Message, MessageResponse>().ForMember(dest => dest.Sender, opt => opt.MapFrom(src => src.User.Name + " " + src.User.Surname));
 
             CreateMap<PaymentRequest, Payment>();
-            CreateMap<Payment, PaymentResponse>().ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.BankCardInfo.User.Name + " " + src.BankCardInfo.User.Surname));
+            CreateMap<Payment, PaymentResponse>()
+     .ForMember(dest => dest.UserName, opt =>
+     {
+         opt.PreCondition(src =>
+             (src.Invoice != null && src.Invoice.Apartment != null && src.Invoice.Apartment.User != null) ||
+             (src.Dues != null && src.Dues.Apartment != null && src.Dues.Apartment.User != null) ||
+             (src.BankCardInfo != null && src.BankCardInfo.User != null)
+         );
+
+         opt.MapFrom(src =>
+             src.Invoice != null && src.Invoice.Apartment != null && src.Invoice.Apartment.User != null
+                 ? src.Invoice.Apartment.User.Name + " " + src.Invoice.Apartment.User.Surname
+                 : (src.Dues != null && src.Dues.Apartment != null && src.Dues.Apartment.User != null
+                     ? src.Dues.Apartment.User.Name + " " + src.Dues.Apartment.User.Surname
+                     : (src.BankCardInfo != null && src.BankCardInfo.User != null
+                         ? src.BankCardInfo.User.Name + " " + src.BankCardInfo.User.Surname
+                         : "")
+                 ));
+     });
 
             CreateMap<UserRequest, User>();
             CreateMap<User, UserResponse>();
