@@ -1,15 +1,16 @@
-﻿using Serilog;
+﻿using Microsoft.AspNetCore.Http;
+using Serilog;
 using System.IdentityModel.Tokens.Jwt;
 
-namespace WebApi.Helpers
+namespace Business.Helpers
 {
     public class JwtHelper
     {
-        public static int GetUserIdFromJwt(HttpContext httpContext)
+
+        public static int GetUserIdFromJwt(string jwtToken)
         {
             try
             {
-                string jwtToken = httpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var decodedToken = tokenHandler.ReadJwtToken(jwtToken);
 
@@ -21,6 +22,12 @@ namespace WebApi.Helpers
                 Log.Error(ex, "Error while decoding JWT");
                 throw;
             }
+        }
+
+        public static int GetUserIdFromJwt(HttpContext httpContext)
+        {
+            string jwtToken = httpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            return GetUserIdFromJwt(jwtToken);
         }
     }
 }

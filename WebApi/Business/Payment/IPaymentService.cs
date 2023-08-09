@@ -8,7 +8,7 @@ namespace Business
         ApiResponse<List<PaymentResponse>> GetAll(params string[] includes);
         ApiResponse<PaymentResponse> GetById(int id);
 
-        ApiResponse<PayResponse> Pay(PayRequest request);
+        ApiResponse<PayResponse> Pay(int userId, PayRequest request);
         ApiResponse Delete(int Id);
     }
 }

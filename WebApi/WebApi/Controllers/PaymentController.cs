@@ -1,29 +1,24 @@
 ﻿
 using Base;
 using Business;
-using DataAccess.Uow;
+using Business.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Schema;
-using Serilog;
-using System.IdentityModel.Tokens.Jwt;
-using WebApi.Helpers;
 
 namespace WebApi.Controllers
 {
-    
+
     [ApiController]
     [Route("[controller]s")]
     public class PaymentController : ControllerBase
     {
 
         private readonly IPaymentService service;
-        private readonly IUnitOfWork unitOfWork;
 
-        public PaymentController(IPaymentService service, IUnitOfWork unitOfWork)
+        public PaymentController(IPaymentService service)
         {
             this.service = service;
-            this.unitOfWork = unitOfWork;
         }
 
 
@@ -57,22 +52,10 @@ namespace WebApi.Controllers
         [HttpPost("Transfer")]
         public ApiResponse<PayResponse> Transfer([FromBody] PayRequest request)
         {
-            var usercard = unitOfWork.BankCardInfoRepository.Where(card => card.CardId == request.FromCardId).FirstOrDefault();
-
+            
             int userId = JwtHelper.GetUserIdFromJwt(HttpContext);
 
-            if (usercard.CardId != request.FromCardId || userId != usercard.UserId)
-            {
-                return new ApiResponse<PayResponse>("Card not found or it does not belong to the user.");
-            }
-
-            if(request.FromCardId == request.ToCardId)
-            {
-                return new ApiResponse<PayResponse>("You can only pay to another account.");
-            }
-
-
-            var response = service.Pay(request);
+            var response = service.Pay(userId, request);
             return response;
 
 

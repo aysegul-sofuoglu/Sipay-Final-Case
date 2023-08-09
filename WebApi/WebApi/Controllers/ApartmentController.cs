@@ -1,18 +1,16 @@
 ﻿using AutoMapper;
 using Base;
 using Business;
+using Business.Helpers;
 using DataAccess.Domain;
 using DataAccess.Uow;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Schema;
-using Serilog;
-using System.IdentityModel.Tokens.Jwt;
-using WebApi.Helpers;
 
 namespace WebApi.Controllers
 {
-    
+
     [ApiController]
     [Route("[controller]s")]
     public class ApartmentController : ControllerBase

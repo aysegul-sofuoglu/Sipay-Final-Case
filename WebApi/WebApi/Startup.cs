@@ -27,7 +27,6 @@ namespace WebApi
 
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
 
             JwtConfig = Configuration.GetSection("JwtConfig").Get<JwtConfig>();
